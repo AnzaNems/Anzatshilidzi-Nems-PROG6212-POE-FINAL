@@ -1,0 +1,40 @@
+name: RaceDay CI
+
+# Builds the API, builds the MVC app and runs every unit test on each push.
+# A green check mark here is a POE submission requirement.
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore the API
+        run: dotnet restore RaceDayApi/RaceDayApi.csproj
+
+      - name: Restore the MVC app
+        run: dotnet restore RaceDayMvc/RaceDayMvc.csproj
+
+      - name: Restore the test project
+        run: dotnet restore RaceDayApi.Tests/RaceDayApi.Tests.csproj
+
+      - name: Build the API
+        run: dotnet build RaceDayApi/RaceDayApi.csproj --no-restore -c Release
+
+      - name: Build the MVC app
+        run: dotnet build RaceDayMvc/RaceDayMvc.csproj --no-restore -c Release
+
+      - name: Run all unit tests
+        run: >
+          dotnet test RaceDayApi.Tests/RaceDayApi.Tests.csproj
+          --no-restore -c Release --verbosity normal
