@@ -75,7 +75,7 @@ Banner and profile-picture uploads stream through `POST /api/files` into the `ra
 ```powershell
 dotnet user-secrets set "AzureBlob:ConnectionString" "<your-connection-string>" --project RaceDayApi
 <img width="1920" height="1020" alt="ci-success" src="https://github.com/user-attachments/assets/c1df8e14-a494-44dd-92f2-040f48da2bf8" />
-
+```
 6. Docker (Part 3)
 docker build -t raceday-mvc .
 docker run -d -p 8080:8080 --name raceday-mvc raceday-mvc
