@@ -1,0 +1,9 @@
+# Docker build context hygiene - keeps the image small and the build fast.
+**/bin/
+**/obj/
+**/.git/
+**/.vs/
+**/*.user
+**/node_modules/
+docs/
+README*.md

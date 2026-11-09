@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!--
+    The MVC project deliberately has ZERO NuGet packages:
+    no EF Core, no SQL client, no JWT validation. It only renders HTML,
+    keeps session state and calls the API over HttpClient.
+  -->
+
+</Project>
