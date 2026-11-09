@@ -1,0 +1,160 @@
+/* ============================================================
+   RaceDay theme - sporting, energetic, consistent on every page
+   Palette: deep navy #0a1f44, electric orange #ff6b35,
+            teal #00b4a0 (Run), sky #3e7cb1 (Walk), violet accents (Cycle)
+   ============================================================ */
+
+:root {
+    --rd-navy: #0a1f44;
+    --rd-navy-2: #13294b;
+    --rd-orange: #ff6b35;
+    --rd-orange-deep: #e5551f;
+    --rd-teal: #00b4a0;
+    --rd-sky: #3e7cb1;
+    --rd-violet: #7a5fb5;
+    --rd-bg: #f4f6fa;
+}
+
+body {
+    background: var(--rd-bg);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.rd-main { flex: 1 0 auto; }
+
+/* ---------- navbar ---------- */
+.rd-navbar {
+    background: linear-gradient(90deg, var(--rd-navy) 0%, var(--rd-navy-2) 60%, #1b3a6b 100%);
+    border-bottom: 3px solid var(--rd-orange);
+}
+.rd-brand { font-size: 1.35rem; letter-spacing: 0.5px; }
+.rd-brand-icon { color: var(--rd-orange); margin-right: 2px; }
+.rd-logout-btn { margin-top: 4px; }
+
+/* ---------- buttons ---------- */
+.rd-btn-accent {
+    background: var(--rd-orange);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+}
+.rd-btn-accent:hover { background: var(--rd-orange-deep); color: #fff; }
+
+/* ---------- hero ---------- */
+.rd-hero {
+    background:
+        radial-gradient(circle 380px at 85% 20%, rgba(255, 107, 53, 0.35) 0 379px, transparent 380px),
+        radial-gradient(circle 300px at 12% 85%, rgba(0, 180, 160, 0.25) 0 299px, transparent 300px),
+        linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-navy-2) 100%);
+    color: #fff;
+    padding: 3.2rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.6rem;
+}
+.rd-hero h1 {
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+.rd-hero .rd-accent { color: var(--rd-orange); }
+.rd-hero-compact {
+    background: linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-navy-2) 100%);
+    color: #fff;
+}
+.rd-hero-compact h1 { font-weight: 800; }
+.rd-hero-compact .rd-accent { color: var(--rd-orange); }
+
+/* ---------- event cards ---------- */
+.rd-card {
+    border: 1px solid #e3e8f0;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    height: 100%;
+}
+.rd-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(10, 31, 68, 0.12);
+}
+.rd-card-banner {
+    height: 150px;
+    background: linear-gradient(135deg, var(--rd-navy) 0%, #1b3a6b 100%);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+.rd-card-body { padding: 1rem 1.1rem; }
+.rd-card-title { font-weight: 700; color: var(--rd-navy); }
+
+/* ---------- type badges (Run / Walk / Cycle) ---------- */
+.badge-type {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 0.35em 0.7em;
+    border-radius: 2rem;
+}
+.badge-type-1, .badge-type-run { background: var(--rd-orange); color: #fff; }      /* Run  */
+.badge-type-2, .badge-type-walk { background: var(--rd-teal); color: #fff; }       /* Walk */
+.badge-type-3, .badge-type-cycle { background: var(--rd-sky); color: #fff; }       /* Cycle */
+
+/* ---------- enrolment status (colour coding per POE) ---------- */
+.badge-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4em 0.8em;
+    border-radius: 2rem;
+}
+.badge-status-confirmed { background: #198754; color: #fff; }    /* green  */
+.badge-status-pending { background: #ffc107; color: #3a2f00; }   /* amber  */
+
+/* ---------- stat cards on dashboards ---------- */
+.rd-stat {
+    border: none;
+    border-radius: 0.9rem;
+    color: #fff;
+    padding: 1.2rem;
+}
+.rd-stat .rd-stat-value { font-size: 2rem; font-weight: 900; line-height: 1.1; }
+.rd-stat .rd-stat-label { font-size: 0.85rem; opacity: 0.9; }
+.rd-stat-navy { background: linear-gradient(135deg, var(--rd-navy), #1b3a6b); }
+.rd-stat-orange { background: linear-gradient(135deg, var(--rd-orange), var(--rd-orange-deep)); }
+.rd-stat-teal { background: linear-gradient(135deg, var(--rd-teal), #008a7a); }
+.rd-stat-sky { background: linear-gradient(135deg, var(--rd-sky), #2d5f8d); }
+
+/* ---------- misc ---------- */
+.rd-table thead { background: var(--rd-navy); color: #fff; }
+.rd-table thead th { border-bottom: none; }
+.rd-section-title {
+    color: var(--rd-navy);
+    font-weight: 800;
+    letter-spacing: -0.2px;
+}
+.rd-filter-bar {
+    background: #fff;
+    border: 1px solid #e3e8f0;
+    border-radius: 0.9rem;
+    padding: 1rem 1.2rem;
+}
+.rd-footer {
+    background: var(--rd-navy);
+    color: rgba(255, 255, 255, 0.75);
+    border-top: 3px solid var(--rd-orange);
+    font-size: 0.85rem;
+}
+.rd-empty {
+    border: 2px dashed #c8d2e0;
+    border-radius: 0.9rem;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: #64748b;
+}
