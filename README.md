@@ -109,5 +109,5 @@ Multi-stage Dockerfile for the MVC client
 20+ meaningful commits on main
 
 ##  Video Walkthrough
-[Click here to watch the POE Demonstration Video]([PASTE_YOUR_YOUTUBE_LINK_HERE](https://youtu.be/8xxHoRCR9PA))
+[Click here to watch the POE Demonstration Video]((https://youtu.be/8xxHoRCR9PA))
 
