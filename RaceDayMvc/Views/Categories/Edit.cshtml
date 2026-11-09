@@ -1,0 +1,47 @@
+@model SaveCategoryViewModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Events" asp-action="MyEvents">My Events</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Categories" asp-action="Index" asp-route-eventId="@Model.EventId">Categories</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm mx-auto" style="max-width: 560px;">
+    <div class="card-body p-4">
+        <h1 class="rd-section-title h4"><i class="bi bi-pencil rd-accent-text me-2"></i>Edit category</h1>
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="CategoryId" />
+            <input type="hidden" asp-for="EventId" />
+
+            <div class="mb-3">
+                <label asp-for="CategoryName" class="form-label"></label>
+                <input asp-for="CategoryName" class="form-control" />
+                <span asp-validation-for="CategoryName" class="text-danger small"></span>
+            </div>
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <label asp-for="DistanceKm" class="form-label"></label>
+                    <input asp-for="DistanceKm" class="form-control" type="number" step="0.1" min="0.1" />
+                    <span asp-validation-for="DistanceKm" class="text-danger small"></span>
+                </div>
+                <div class="col-6">
+                    <label asp-for="EntryFee" class="form-label"></label>
+                    <input asp-for="EntryFee" class="form-control" type="number" step="0.01" min="0" />
+                    <span asp-validation-for="EntryFee" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn rd-btn-accent px-4">Save changes</button>
+                <a class="btn btn-outline-secondary" asp-controller="Categories" asp-action="Index"
+                   asp-route-eventId="@Model.EventId">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

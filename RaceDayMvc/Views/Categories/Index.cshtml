@@ -1,0 +1,103 @@
+@model List<CategoryViewModel>
+@{
+    ViewData["Title"] = "Categories";
+    var evt = (EventDetailViewModel)ViewBag.Event;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Events" asp-action="MyEvents">My Events</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Categories</li>
+    </ol>
+</nav>
+
+<h1 class="rd-section-title mb-1"><i class="bi bi-tags rd-accent-text me-2"></i>Categories</h1>
+<p class="text-muted">
+    Age or distance categories for <strong>@evt.EventName</strong>
+    (@evt.EventDate.ToString("dd MMM yyyy")).
+</p>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        @if (Model.Count == 0)
+        {
+            <div class="rd-empty">
+                <i class="bi bi-tags display-6 d-block mb-2"></i>
+                No categories yet - add the first one so participants can enter.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive bg-white rounded-3 border">
+                <table class="table rd-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Distance</th>
+                            <th>Entry fee</th>
+                            <th class="text-center">Entered</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cat in Model)
+                        {
+                            <tr>
+                                <td><strong>@cat.CategoryName</strong></td>
+                                <td>@cat.DistanceKm km</td>
+                                <td>R @cat.EntryFee.ToString("0.00")</td>
+                                <td class="text-center">@cat.EnrolmentCount</td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a class="btn btn-outline-primary" asp-controller="Categories" asp-action="Edit" asp-route-id="@cat.CategoryId"><i class="bi bi-pencil"></i></a>
+                                        <form asp-controller="Categories" asp-action="Delete" method="post"
+                              onsubmit="return confirm('Delete category @cat.CategoryName?');">
+                                            <input type="hidden" name="id" value="@cat.CategoryId" />
+                                            <input type="hidden" name="eventId" value="@evt.EventId" />
+                                            <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-text mt-2">
+                <i class="bi bi-info-circle me-1"></i>
+                Categories with active enrolments cannot be deleted (the API answers 409 Conflict).
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="rd-section-title h5"><i class="bi bi-plus-circle me-1"></i>Add a category</h2>
+                <form asp-controller="Categories" asp-action="Create" method="post">
+                    <input type="hidden" name="EventId" value="@evt.EventId" />
+                    <div class="mb-3">
+                        <label class="form-label">Category name</label>
+                        <input type="text" class="form-control" name="CategoryName"
+                               placeholder="e.g. Under 20, Senior, 10km" required maxlength="50" />
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Distance (km)</label>
+                            <input type="number" class="form-control" name="DistanceKm"
+                                   step="0.1" min="0.1" value="@evt.DistanceKm" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Entry fee (R)</label>
+                            <input type="number" class="form-control" name="EntryFee"
+                                   step="0.01" min="0" value="150" required />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn rd-btn-accent w-100">
+                        <i class="bi bi-check2 me-1"></i>Add category
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+@model List<ResultEntryRowViewModel>
+@{
+    ViewData["Title"] = "Results Entry";
+    var evt = (EventDetailViewModel)ViewBag.Event;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Events" asp-action="MyEvents">My Events</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Results</li>
+    </ol>
+</nav>
+
+<h1 class="rd-section-title mb-1"><i class="bi bi-stopwatch rd-accent-text me-2"></i>Results entry</h1>
+<p class="text-muted">
+    Capture or correct finish times and positions for
+    <strong>@evt.EventName</strong> (@evt.EventDate.ToString("dd MMM yyyy")).
+    Times use the HH:MM:SS format, e.g. 03:45:12.
+</p>
+
+@if (Model.Count == 0)
+{
+    <div class="rd-empty">
+        <i class="bi bi-people display-6 d-block mb-2"></i>
+        Nobody has entered this event yet, so there is nothing to capture.
+    </div>
+}
+else
+{
+    <!-- One hidden form per row (valid HTML5 pattern: inputs reference their form by id). -->
+    foreach (var row in Model)
+    {
+        <form id="rf-@row.EnrolmentId" asp-controller="Results" asp-action="Save" method="post" class="d-none">
+            <input type="hidden" name="EnrolmentId" value="@row.EnrolmentId" />
+            <input type="hidden" name="ParticipantName" value="@row.ParticipantName" />
+            <input type="hidden" name="CategoryName" value="@row.CategoryName" />
+            <input type="hidden" name="Status" value="@row.Status" />
+            <input type="hidden" name="ResultId" value="@row.ResultId" />
+            <input type="hidden" name="eventId" value="@evt.EventId" />
+        </form>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table rd-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="min-width: 180px;">Participant</th>
+                        <th>Category</th>
+                        <th style="width: 150px;">Finish time</th>
+                        <th style="width: 110px;">Position</th>
+                        <th class="text-center" style="width: 60px;">DQ</th>
+                        <th style="width: 110px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        var fid = $"rf-{row.EnrolmentId}";
+                        <tr class="@(row.ResultId != null ? "table-success" : "")">
+                            <td>
+                                <strong>@row.ParticipantName</strong><br />
+                                <span class="badge-status @(row.Status == "Confirmed" ? "badge-status-confirmed" : "badge-status-pending")">@row.Status</span>
+                            </td>
+                            <td>@row.CategoryName</td>
+                            <td>
+                                <input type="time" class="form-control form-control-sm" name="FinishTime" form="@fid"
+                                       value="@row.FinishTime" step="1" required />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm" name="Position" form="@fid"
+                                       value="@(row.Position > 0 ? row.Position : "")" min="1" required />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="IsDisqualified" form="@fid"
+                                       value="true" @(row.IsDisqualified ? "checked" : "") />
+                            </td>
+                            <td class="text-end">
+                                <button type="submit" class="btn btn-sm @(row.ResultId != null ? "btn-outline-primary" : "rd-btn-accent")" form="@fid">
+                                    @(row.ResultId != null ? "Update" : "Capture")
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-text mt-2">
+        <i class="bi bi-info-circle me-1"></i>
+        Green rows already have a result. Tick <strong>DQ</strong> to mark a disqualification -
+        it shows on the participant's results but does not count them as a finisher.
+    </div>
+}
