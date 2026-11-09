@@ -24,7 +24,6 @@ Two projects, one solution. The MVC client never touches the database: every req
 | `RaceDayApi` | RESTful API: EF Core DbContext, JWT authentication, business rules, Azure Blob uploads |
 | `RaceDayMvc` | MVC client: Razor views, Bootstrap UI, session state, HttpClient calls to the API |
 | `RaceDayApi.Tests` | 26 xUnit integration tests (auth, roles, events, enrolments, results) |
-
 > Golden rule: the MVC project holds no DbContext and no connection strings. Security is enforced by the API on every protected endpoint.
 
 ## 2. Roles
@@ -109,5 +108,6 @@ Azure Blob Storage uploads wired through the API
 Multi-stage Dockerfile for the MVC client
 20+ meaningful commits on main
 
-
+##  Video Walkthrough
+[Click here to watch the POE Demonstration Video]([PASTE_YOUR_YOUTUBE_LINK_HERE](https://youtu.be/8xxHoRCR9PA))
 
