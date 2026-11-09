@@ -108,6 +108,5 @@ Azure Blob Storage uploads wired through the API
 Multi-stage Dockerfile for the MVC client
 20+ meaningful commits on main
 
-##  Video Walkthrough
-[Click here to watch the POE Demonstration Video]((https://youtu.be/8xxHoRCR9PA))
-
+## 🎥 Video Walkthrough
+[Click here to watch the POE Demonstration Video]( https://youtu.be/8xxHoRCR9PA ) https://youtu.be/8xxHoRCR9PA 
