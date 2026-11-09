@@ -1,0 +1,73 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="rd-hero-compact rounded-3 p-4 text-center mb-3">
+            <i class="bi bi-person-plus-fill rd-accent display-6"></i>
+            <h2 class="fw-bold mb-0">Join RaceDay</h2>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" placeholder="Your full name" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="you@example.co.za" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                        <div class="form-text">At least 6 characters.</div>
+                    </div>
+
+                    <label asp-for="Role" class="form-label"></label>
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <label class="border rounded-3 p-3 d-block h-100 role-option">
+                                <input type="radio" asp-for="Role" value="Participant" class="form-check-input mt-0" />
+                                <i class="bi bi-person-fill ms-2"></i>
+                                <strong>Participant</strong>
+                                <div class="small text-muted mt-1">Browse events, enter races, track results.</div>
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <label class="border rounded-3 p-3 d-block h-100 role-option">
+                                <input type="radio" asp-for="Role" value="Organiser" class="form-check-input mt-0" />
+                                <i class="bi bi-megaphone-fill ms-2"></i>
+                                <strong>Organiser</strong>
+                                <div class="small text-muted mt-1">Create events, categories and capture results.</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn rd-btn-accent w-100 py-2">
+                        <i class="bi bi-check2-circle me-1"></i>Create account
+                    </button>
+                </form>
+            </div>
+        </div>
+        <p class="text-center mt-3 mb-0">
+            Already have an account?
+            <a asp-controller="Account" asp-action="Login" class="fw-semibold">Log in</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .role-option { cursor: pointer; }
+    .role-option:has(input:checked) {
+        border-color: var(--rd-orange) !important;
+        background: #fff5f0;
+        box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.25);
+    }
+</style>

@@ -1,0 +1,98 @@
+@model List<EventViewModel>
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+    var next = (EventViewModel?)ViewBag.NextEvent;
+}
+
+<h1 class="rd-section-title mb-1">Organiser Dashboard</h1>
+<p class="text-muted">A summary of everything you have created and everyone who has entered.</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="rd-stat rd-stat-navy h-100">
+            <div class="rd-stat-value">@ViewBag.TotalEvents</div>
+            <div class="rd-stat-label"><i class="bi bi-trophy me-1"></i>Total events created</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="rd-stat rd-stat-orange h-100">
+            <div class="rd-stat-value">@ViewBag.UpcomingEvents</div>
+            <div class="rd-stat-label"><i class="bi bi-calendar-event me-1"></i>Upcoming events</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="rd-stat rd-stat-teal h-100">
+            <div class="rd-stat-value">@ViewBag.TotalEnrolments</div>
+            <div class="rd-stat-label"><i class="bi bi-people-fill me-1"></i>Total enrolments</div>
+        </div>
+    </div>
+</div>
+
+@if (next != null)
+{
+    <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <div>
+            <i class="bi bi-hourglass-split me-2"></i>
+            Next up: <strong>@next.EventName</strong> on @next.EventDate.ToString("dd MMMM yyyy")
+            (@next.EnrolmentCount entered so far)
+        </div>
+        <a class="btn btn-sm btn-outline-primary"
+           asp-controller="Events" asp-action="Details" asp-route-id="@next.EventId">Open</a>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="rd-section-title h4 mb-0">Your events</h2>
+    <a class="btn rd-btn-accent" asp-controller="Events" asp-action="Create">
+        <i class="bi bi-plus-circle me-1"></i>New event
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="rd-empty">
+        <i class="bi bi-trophy display-6 d-block mb-2"></i>
+        You have not created any events yet - click <strong>New event</strong> to get started.
+    </div>
+}
+else
+{
+    <div class="table-responsive bg-white rounded-3 border">
+        <table class="table table-hover rd-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th class="text-center">Categories</th>
+                    <th class="text-center">Enrolments</th>
+                    <th class="text-end">Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evt in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@evt.EventName</strong><br />
+                            <small class="text-muted">@evt.Location &middot; @evt.DistanceKm km</small>
+                        </td>
+                        <td>@evt.EventDate.ToString("dd MMM yyyy")</td>
+                        <td><span class="badge-type badge-type-@evt.EventTypeId">@evt.EventTypeName</span></td>
+                        <td class="text-center">@evt.CategoryCount</td>
+                        <td class="text-center">@evt.EnrolmentCount</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-secondary" asp-controller="Categories" asp-action="Index" asp-route-eventId="@evt.EventId" title="Categories"><i class="bi bi-tags"></i></a>
+                                <a class="btn btn-outline-secondary" asp-controller="Enrolments" asp-action="Index" asp-route-eventId="@evt.EventId" title="Enrolments"><i class="bi bi-people"></i></a>
+                                <a class="btn btn-outline-secondary" asp-controller="Results" asp-action="Entry" asp-route-eventId="@evt.EventId" title="Results"><i class="bi bi-stopwatch"></i></a>
+                                <a class="btn btn-outline-primary" asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId" title="Edit"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-outline-danger" asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId" title="Delete"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
