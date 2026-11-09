@@ -1,0 +1,96 @@
+@model List<EventViewModel>
+@{
+    ViewData["Title"] = "My Events";
+    var today = DateTime.Today;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="rd-section-title mb-0"><i class="bi bi-trophy rd-accent-text me-2"></i>My events</h1>
+        <p class="text-muted mb-0">Events you have created as an Organiser.</p>
+    </div>
+    <a class="btn rd-btn-accent" asp-controller="Events" asp-action="Create">
+        <i class="bi bi-plus-circle me-1"></i>New event
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="rd-empty">
+        <i class="bi bi-trophy display-6 d-block mb-2"></i>
+        No events yet - create your first one and categories will open for entry.
+    </div>
+}
+else
+{
+    var upcoming = Model.Where(e => e.EventDate.Date >= today).ToList();
+    var past = Model.Where(e => e.EventDate.Date < today).ToList();
+
+    if (upcoming.Count > 0)
+    {
+        <h2 class="rd-section-title h5"><i class="bi bi-calendar-event me-1"></i>Upcoming (@upcoming.Count)</h2>
+        <div class="row g-4 mb-4">
+            @foreach (var evt in upcoming)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="rd-card">
+                        <div class="rd-card-banner"
+                             style="@(evt.BannerImageUrl != null ? $"background-image:url('{evt.BannerImageUrl}')" : "")">
+                            @if (evt.BannerImageUrl == null)
+                            {
+                                <i class="bi bi-trophy"></i>
+                            }
+                        </div>
+                        <div class="rd-card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <span class="badge-type badge-type-@evt.EventTypeId">@evt.EventTypeName</span>
+                                <small class="text-muted fw-semibold">@evt.EventDate.ToString("dd MMM yyyy")</small>
+                            </div>
+                            <h5 class="rd-card-title mb-1">@evt.EventName</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-geo-alt-fill"></i> @evt.Location &middot; @evt.DistanceKm km
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="bi bi-people"></i> @evt.EnrolmentCount entered</small>
+                                <a class="btn btn-sm rd-btn-accent" asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId">Manage</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    if (past.Count > 0)
+    {
+        <h2 class="rd-section-title h5"><i class="bi bi-clock-history me-1"></i>Completed (@past.Count)</h2>
+        <div class="table-responsive bg-white rounded-3 border">
+            <table class="table rd-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th class="text-center">Enrolments</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var evt in past)
+                    {
+                        <tr>
+                            <td><strong>@evt.EventName</strong></td>
+                            <td>@evt.EventDate.ToString("dd MMM yyyy")</td>
+                            <td class="text-center">@evt.EnrolmentCount</td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-outline-secondary" asp-controller="Results" asp-action="Entry" asp-route-eventId="@evt.EventId" title="Capture results"><i class="bi bi-stopwatch"></i> Results</a>
+                                    <a class="btn btn-outline-secondary" asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId" title="Details"><i class="bi bi-info-circle"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

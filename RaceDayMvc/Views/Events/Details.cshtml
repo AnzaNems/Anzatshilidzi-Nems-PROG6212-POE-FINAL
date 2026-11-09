@@ -1,0 +1,141 @@
+@model EventDetailViewModel
+@{
+    ViewData["Title"] = Model.EventName;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Events</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.EventName</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
+    <div class="rd-card-banner"
+         style="height: 260px; @(Model.BannerImageUrl != null ? $"background-image:url('{Model.BannerImageUrl}')" : "")">
+        @if (Model.BannerImageUrl == null)
+        {
+            <i class="bi bi-trophy" style="font-size: 4rem;"></i>
+        }
+    </div>
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <span class="badge-type badge-type-@Model.EventTypeId">@Model.EventTypeName</span>
+                <h1 class="rd-section-title mt-2 mb-1">@Model.EventName</h1>
+                <p class="text-muted mb-2">
+                    <i class="bi bi-calendar3 me-1"></i>@Model.EventDate.ToString("dddd, dd MMMM yyyy")
+                    &nbsp;&middot;&nbsp;
+                    <i class="bi bi-geo-alt-fill me-1"></i>@Model.Location
+                    &nbsp;&middot;&nbsp;
+                    <i class="bi bi-rulers me-1"></i>@Model.DistanceKm km
+                </p>
+                <p class="mb-0 text-muted">
+                    <i class="bi bi-person-badge me-1"></i>Organised by <strong>@Model.OrganiserName</strong>
+                    &nbsp;&middot;&nbsp;
+                    <i class="bi bi-people me-1"></i>@Model.EnrolmentCount participants entered
+                </p>
+            </div>
+            @if (ViewBag.CanManage)
+            {
+                <div class="btn-group">
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="Categories" asp-action="Index" asp-route-eventId="@Model.EventId"><i class="bi bi-tags me-1"></i>Categories</a>
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="Enrolments" asp-action="Index" asp-route-eventId="@Model.EventId"><i class="bi bi-people me-1"></i>Enrolments</a>
+                    <a class="btn btn-outline-primary btn-sm" asp-controller="Results" asp-action="Entry" asp-route-eventId="@Model.EventId"><i class="bi bi-stopwatch me-1"></i>Results</a>
+                </div>
+            }
+        </div>
+        <hr />
+        <p class="mb-0">@Model.Description</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <h2 class="rd-section-title h4">Categories</h2>
+        @if (Model.Categories.Count == 0)
+        {
+            <div class="rd-empty">
+                <i class="bi bi-tags display-6 d-block mb-2"></i>
+                The organiser has not opened categories for this event yet.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive bg-white rounded-3 border">
+                <table class="table rd-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Distance</th>
+                            <th>Entry fee</th>
+                            <th class="text-center">Entered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <tr>
+                                <td><strong>@cat.CategoryName</strong></td>
+                                <td>@cat.DistanceKm km</td>
+                                <td>R @cat.EntryFee.ToString("0.00")</td>
+                                <td class="text-center">@cat.EnrolmentCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-5">
+        @if (ViewBag.CanEnter)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="rd-section-title h4"><i class="bi bi-flag-fill rd-accent-text me-2"></i>Enter this event</h2>
+                    @if (Model.IsPast)
+                    {
+                        <div class="alert alert-warning mb-0">
+                            <i class="bi bi-hourglass-bottom me-1"></i>
+                            This event has already taken place and is closed for entry.
+                        </div>
+                    }
+                    else if (Model.Categories.Count == 0)
+                    {
+                        <div class="alert alert-info mb-0">No categories available yet - check back soon.</div>
+                    }
+                    else
+                    {
+                        <form asp-controller="Events" asp-action="Enter" method="post">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <label class="form-label">Choose your category</label>
+                            <select name="categoryId" class="form-select mb-3" required>
+                                @foreach (var cat in Model.Categories)
+                                {
+                                    <option value="@cat.CategoryId">
+                                        @cat.CategoryName - @cat.DistanceKm km (R @cat.EntryFee.ToString("0.00"))
+                                    </option>
+                                }
+                            </select>
+                            <button type="submit" class="btn rd-btn-accent w-100 py-2">
+                                <i class="bi bi-lightning-charge-fill me-1"></i>Enter event
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+        else if (Context.Session.GetString("Token") == null)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-person-plus display-6 rd-accent"></i>
+                    <h2 class="rd-section-title h5 mt-2">Want to enter?</h2>
+                    <p class="text-muted">Log in as a Participant to enter this event.</p>
+                    <a class="btn rd-btn-accent" asp-controller="Account" asp-action="Login">Log in to enter</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
