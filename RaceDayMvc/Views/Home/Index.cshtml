@@ -1,0 +1,95 @@
+@model List<EventViewModel>
+@{
+    ViewData["Title"] = "Upcoming Events";
+    var filter = (EventFilterViewModel)ViewBag.Filter ?? new EventFilterViewModel();
+}
+
+<div class="rd-hero">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <h1 class="display-5">Find your <span class="rd-accent">next race</span></h1>
+            <p class="lead mb-0">
+                Road runs, walks and cycle events across South Africa - browse, pick your
+                category and enter in seconds.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <span class="badge bg-light text-dark p-2">
+                <i class="bi bi-calendar3 me-1"></i>@Model.Count upcoming event(s)
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="rd-filter-bar mb-4">
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label mb-1 small">Search</label>
+            <input type="text" class="form-control" name="Search" value="@filter.Search"
+                   placeholder="Event name or description" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label mb-1 small">Location</label>
+            <input type="text" class="form-control" name="Location" value="@filter.Location"
+                   placeholder="e.g. Cape Town" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label mb-1 small">Event type</label>
+            <select class="form-select" name="EventTypeId">
+                <option value="0">All types</option>
+                <option value="1" selected="@(filter.EventTypeId == 1)">Run</option>
+                <option value="2" selected="@(filter.EventTypeId == 2)">Walk</option>
+                <option value="3" selected="@(filter.EventTypeId == 3)">Cycle</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn rd-btn-accent w-100"><i class="bi bi-funnel me-1"></i>Filter</button>
+        </div>
+    </form>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="rd-empty">
+        <i class="bi bi-search display-6 d-block mb-2"></i>
+        No upcoming events match your filters. Try clearing the search or choosing all types.
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var evt in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="rd-card">
+                    <div class="rd-card-banner"
+                         style="@(evt.BannerImageUrl != null ? $"background-image:url('{evt.BannerImageUrl}')" : "")">
+                        @if (evt.BannerImageUrl == null)
+                        {
+                            <i class="bi bi-trophy"></i>
+                        }
+                    </div>
+                    <div class="rd-card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <span class="badge-type badge-type-@evt.EventTypeId">@evt.EventTypeName</span>
+                            <small class="text-muted fw-semibold">@evt.EventDate.ToString("dd MMM yyyy")</small>
+                        </div>
+                        <h5 class="rd-card-title mb-1">@evt.EventName</h5>
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-geo-alt-fill rd-accent-text"></i> @evt.Location
+                            &middot; @evt.DistanceKm km
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-people"></i> @evt.EnrolmentCount entered &middot;
+                                @evt.CategoryCount categories
+                            </small>
+                            <a class="btn btn-sm rd-btn-accent"
+                               asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
